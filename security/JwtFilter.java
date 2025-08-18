@@ -16,12 +16,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
+    private final HandlerExceptionResolver handlerExceptionResolver;
     private final UserService userService;
     private final JwtService jwtService;
 
@@ -35,10 +37,10 @@ public class JwtFilter extends OncePerRequestFilter {
         String username = null;
         boolean isTokenExpired = true;
 
-        // On recupere notre token
-        final String requestAuthorization = request.getHeader("Authorization");
-
         try {
+            // On recupere notre token
+            final String requestAuthorization = request.getHeader("Authorization");
+
             if (requestAuthorization != null && requestAuthorization.startsWith("Bearer ")) {
                 token = requestAuthorization.substring(7);
 
@@ -61,14 +63,12 @@ public class JwtFilter extends OncePerRequestFilter {
                 // Je creer une donnée d'aithentification dans le contexte et je passe a spring security
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
-        } catch (UsernameNotFoundException e) {
-            logger.warn("Erreur lors du traitement du token JWT : {}", e.getMessage());
-
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
+            // La chaine de filtre: Continue a filtree notre requete et notre reponse
+            filterChain.doFilter(request, response);
+        } catch (Exception exception) {
+            this.handlerExceptionResolver.resolveException(request, response, null, exception);
         }
 
-        // La chaine de filtre: Continue a filtree notre requete et notre reponse
-        filterChain.doFilter(request, response);
+
     }
 }

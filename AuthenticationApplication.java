@@ -4,7 +4,6 @@ import com.ninehub.authentication.entity.Role;
 import com.ninehub.authentication.entity.User;
 import com.ninehub.authentication.entity.enums.RoleType;
 import com.ninehub.authentication.repository.UserRepository;
-import lombok.AllArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;

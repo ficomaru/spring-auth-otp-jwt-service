@@ -45,6 +45,11 @@ public class SecurityConfig {
                                                 .requestMatchers(POST, "/password/update").permitAll()
                                                 .requestMatchers(POST, "/password/new").permitAll()
                                                 .requestMatchers(POST, "/refresh/token").permitAll()
+                                                .requestMatchers(
+                                                        "/v3/api-docs/**",
+                                                        "/swagger-ui/**",
+                                                        "/swagger-ui.html"
+                                                ).permitAll()
                                                 // Pour mieux gerer les permissions, on peut utiliser hasAnyAuthority au lieu de hasRole ou hasAnyRole
                                                 .requestMatchers(GET, "/avis/all").hasAnyAuthority("ROLE_MODERATOR","ROLE_ADMIN")
                                                 .anyRequest().authenticated()

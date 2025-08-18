@@ -23,10 +23,10 @@ public class UserService implements UserDetailsService {
     private BCryptPasswordEncoder passwordEncoder;
     private ValidationService validationService;
     private static final Pattern EMAIL_REGEX = Pattern.compile(
-            "^[a-zA-Z0-9_+&*-]+(?:\\\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\\\.)+[a-zA-Z]{2,7}$"
+            "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
     );
 
-    public void register(User user){
+    public User register(User user){
         if (!EMAIL_REGEX.matcher(user.getEmail()).matches()) {
             throw new RuntimeException("Invalid email format");
         }
@@ -44,11 +44,21 @@ public class UserService implements UserDetailsService {
         Role userRole = new Role();
         userRole.setRoleType(RoleType.USER);
 
+        if(user.getRole() != null && user.getRole().getRoleType().equals(RoleType.ADMIN)){
+            userRole.setRoleType(RoleType.ADMIN);
+            // If the user is an admin, we automatically activate his account
+            user.setActif(true);
+        }
+
         // Then we affect the role to the user
         user.setRole(userRole);
-
         user = this.userRepository.save(user);
-        this.validationService.saveValidation(user);
+
+        if (user.getRole() != null && user.getRole().getRoleType().equals(RoleType.USER)) {
+            this.validationService.saveValidation(user);
+        }
+
+        return user;
     }
 
     public void activateAccount(Map<String, String> activation) {
