@@ -31,6 +31,7 @@ Includes **JWT access & refresh tokens**, **OTP verification**, **SMTP4dev for e
 - **BCrypt**
 - **SMTP4dev (Docker)** for email testing
 - **PostgreSQL**
+- **Swagger/OpenApi**
 
 ---
 
