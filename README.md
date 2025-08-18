@@ -44,8 +44,8 @@ cd spring-boot-jwt-otp-auth
 ```
 ### 2️⃣ Run SMTP4dev with Docker
 ```bash
-docker run --rm -p 9025:25 -p 9025:25 rnwood/smtp4dev
-Web UI: http://localhost:9025
+docker run --rm -p 5000:25 -p 5000:25 rnwood/smtp4dev
+Web UI: http://localhost:5000
 SMTP Server: localhost:25
 ```
 ### 3️⃣ Configure environment
